@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Машинка</title>
+  <style>
+    /* Общие стили страницы */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
+    /* Контейнер плеера */
+    .player-container {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* Само видео */
+    video {
+      width: 100%;
+      border-radius: 12px;
+      background-color: #000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      outline: none;
+    }
+
+    /* Панель управления */
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Группы кнопок */
+    .control-group {
+      display: flex;
+      gap: 8px;
+      background-color: #2a2a2a;
+      padding: 8px 12px;
+      border-radius: 8px;
+      align-items: center;
+    }
+
+    /* Стили для кнопок */
+    button {
+      background-color: #3a3a3a;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button:hover {
+      background-color: #555555;
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* Выделение главной кнопки (Play) */
+    .btn-primary {
+      background-color: #0078D4;
+      font-weight: bold;
+      Машинка
+
+    }
+    
+    .btn-primary:hover {
+      background-color: #005a9e;
+    }
+
+    /* Текст громкости */
+    .volume-label {
+      font-size: 14px;
+      margin-right: 5px;
+      color: #aaaaaa;
+    }
+
+    /* Стилизация ползунка громкости */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100px;
+      background: transparent;
+    }
+
+    input[type=range]:focus {
+      outline: none;
+    }
+
+    /* Дорожка ползунка */
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 6px;
+      cursor: pointer;
+      background: #444;
+      border-radius: 4px;
+    }
+
+    /* Сам ползунок */
+    input[type=range]::-webkit-slider-thumb {
+      height: 14px;
+      width: 14px;
+      border-radius: 50%;
+      background: #0078D4;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -4px;
+      transition: transform 0.1s;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Машинка</h2>
+
+  <div class="player-container">
+    <video id="myVideo" controls>
+      <source src="video1.mp4" type="video/mp4" id="mainSource">
+      Ваш браузер не поддерживает видео.
+    </video>
+
+    <div class="controls">
+      
+      <div class="control-group">
+        <button onclick="changeVideo('video1.mp4')">🎬 Видео 1</button>
+        <button onclick="changeVideo('video2.mp4')">🎬 Видео 2</button>
+      </div>
+
+      <div class="control-group">
+        <button class="btn-primary" onclick="playVideo()">▶ Play</button>
+        <button onclick="pauseVideo()">⏸ Pause</button>
+        <button onclick="stopVideo()">⏹ Stop</button>
+      </div>
+
+      <div class="control-group">
+        <button onclick="speedUp()">+0.5x</button>
+        <button onclick="slowDown()">-0.5x</button>
+      </div>
+
+      <div class="control-group">
+        <span class="volume-label">🔊</span>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5" title="Громкость">
+        <button onclick="toggleFullscreen()" style="margin-left: 8px;">⛶</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById("myVideo");
+
+    // Функция переключения исходного файла
+    function changeVideo(src) {
+      video.src = src;  // Подставляем новое имя файла
+      video.load();     // Даем браузеру команду загрузить новый файл
+      video.play();     // Автоматически запускаем воспроизведение
+    }
+
+    function playVideo() { video.play(); }
+    function pauseVideo() { video.pause(); }
+    function stopVideo() { video.pause(); video.currentTime = 0; }
+    function toggleFullscreen() { if (video.requestFullscreen) { video.requestFullscreen(); } }
+    
+    function speedUp() { video.playbackRate += 0.5; }
+    function slowDown() { video.playbackRate = Math.max(0.5, video.playbackRate - 0.5); }
+
+    // Управление громкостью
+    document.getElementById("volumeSlider").addEventListener("input", (e) => {
+      video.volume = e.target.value;
+    });
+
+    video.volume = document.getElementById("volumeSlider").value;
+  </script>
+
+</body>
+</html>
